@@ -3,71 +3,112 @@ package ic.doc;
 //MODEL
 
 public class RPCalculator {
+    private static final String EMPTY_STRING = "";
+    private String digitsAcc;
+    private Updatable view;
+    private int res;
 
-    String digitsAcc;
-    GridLayoutView view;
-    int res;
-    boolean hasOperator;
-
-    public RPCalculator(GridLayoutView view) {
-        this.view = view;
-        this.res = 0;
-        this.digitsAcc = "";
-        this.hasOperator = false;
+    public RPCalculator(Updatable view) {
+        this.view      = view;
+        this.res       = 0;
+        this.digitsAcc = EMPTY_STRING;
     }
-
-    public boolean hasGotABinaryOperator() {
-        return hasOperator;
-    }
-
 
     public String printStack() {
         return digitsAcc;
     }
 
-    public void perform(String actionCommand) {
-
-        switch(actionCommand) {
-            case "Space":
-                if (!digitsAcc.equals("")) {
-                    res = Integer.parseInt(digitsAcc);
-                    digitsAcc = "";
-                }
-                break;
-            case "Delete":
-                if (!digitsAcc.equals("")) {
-                    digitsAcc
-                            = digitsAcc.substring(0, digitsAcc.length() - 1);
-                }
-                break;
+    public void perform(String actionCommand) throws ArithmeticException {
+        switch (actionCommand) {
             case "+":
-                if (!digitsAcc.equals("")) {
-                    res += Integer.parseInt(digitsAcc);
-                    digitsAcc = String.valueOf(res);
-                }
-                break;
             case "-":
-                if (!digitsAcc.equals("")) {
-                    res -= Integer.parseInt(digitsAcc);
-                    digitsAcc = String.valueOf(res);
-                }
-                break;
             case "*":
-                if (!digitsAcc.equals("")) {
-                    res *= Integer.parseInt(digitsAcc);
-                    digitsAcc = String.valueOf(res);
-                }
-                break;
             case "/":
-                if (!digitsAcc.equals("")) {
-                    res /= Integer.parseInt(digitsAcc);
-                    digitsAcc = String.valueOf(res);
-                }
+            case "Space" :
+            case "Delete":
+            case "Clear" :
+                performArithmetic(actionCommand);
+                performAction(actionCommand);
                 break;
             default:
                 digitsAcc += actionCommand;
         }
         view.update(this);
+    }
 
+    private void performArithmetic(String actionCommand) {
+        if (!digitsAcc.equals(EMPTY_STRING)) {
+            switch (actionCommand){
+                case "+":
+                    res = safeAdd(res, Integer.parseInt(digitsAcc));
+                    break;
+                case "-":
+                    res = safeSubtract(res, Integer.parseInt(digitsAcc));
+                    break;
+                case "*":
+                    res = safeMultiply(res, Integer.parseInt(digitsAcc));
+                    break;
+                case "/":
+                    res = safeDivide(res, Integer.parseInt(digitsAcc));
+            }
+            digitsAcc = String.valueOf(res);
+        }
+    }
+    private void performAction(String actionCommand) {
+        if (!digitsAcc.equals(EMPTY_STRING)) {
+            switch (actionCommand){
+                case "Space":
+                    res = Integer.parseInt(digitsAcc);
+                    digitsAcc = EMPTY_STRING;
+                    break;
+                case "Delete":
+                    digitsAcc = digitsAcc.substring(0, digitsAcc.length() - 1);
+                    break;
+                case "Clear":
+                    digitsAcc = digitsAcc.replace(digitsAcc, EMPTY_STRING);
+                    res = 0;
+            }
+        }
+    }
+
+    private int safeAdd(int left, int right) throws ArithmeticException {
+        if (right > 0 ? left > Integer.MAX_VALUE - right
+                : left < Integer.MIN_VALUE - right) {
+            handleError();
+        }
+        return left + right;
+    }
+
+    private int safeSubtract(int left, int right) throws ArithmeticException {
+        if (right > 0 ? left < Integer.MIN_VALUE + right
+                : left > Integer.MAX_VALUE + right) {
+            handleError();
+        }
+        return left - right;
+    }
+
+    private int safeMultiply(int left, int right) throws ArithmeticException {
+        if (right > 0 ? left > Integer.MAX_VALUE/right
+                || left < Integer.MIN_VALUE/right
+                : (right < -1 ? left > Integer.MIN_VALUE/right
+                || left < Integer.MAX_VALUE/right
+                : right == -1
+                && left == Integer.MIN_VALUE)) {
+            handleError();
+        }
+        return left * right;
+    }
+
+    private int safeDivide(int left, int right) throws ArithmeticException {
+        if ((left == Integer.MIN_VALUE) && (right == -1)) {
+            handleError();
+        }
+        return left / right;
+    }
+
+    private void handleError() {
+        digitsAcc = "ERROR";
+        view.update(this);
+        throw new ArithmeticException("Integer overflow");
     }
 }

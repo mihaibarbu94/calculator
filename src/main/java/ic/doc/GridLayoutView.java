@@ -11,7 +11,7 @@ import java.util.List;
 public class GridLayoutView implements Updatable {
 
     private final List<JButton> orderedButtons;
-    private final GridLayout grid = new GridLayout(0, 3);
+    private final GridLayout grid      = new GridLayout(0, 3);
     private final JTextField textField = new JTextField(60);
 
     public GridLayoutView(ActionListener controller) {
@@ -47,6 +47,7 @@ public class GridLayoutView implements Updatable {
         orderedButtons.add(new JButton("+"));
         orderedButtons.add(new JButton("/"));
         orderedButtons.add(new JButton("-"));
+        orderedButtons.add(new JButton("Clear"));
         return orderedButtons;
     }
 

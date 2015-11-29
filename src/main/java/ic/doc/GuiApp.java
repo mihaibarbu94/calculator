@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 // Controller
 public class GuiApp {
 
-    private GridLayoutView view = new GridLayoutView(new Controller());
+    private GridLayoutView view     = new GridLayoutView(new Controller());
     private RPCalculator calculator = new RPCalculator(view);
 
     class Controller implements ActionListener {
