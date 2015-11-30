@@ -46,10 +46,12 @@ public class GuiApp {
     	   if (!digitsAcc.equals(EMPTY_STRING) && !opInputted) {
     	       switch (actionCommand){
     	           case "+":
-    	               res = calculator.safeAdd(res, Integer.parseInt(digitsAcc));
+    	               res = calculator.safeAdd(res,
+							   		Integer.parseInt(digitsAcc));
     	               break;
     	           case "-":
-    	               res = calculator.safeSubtract(res, Integer.parseInt(digitsAcc));
+    	               res = calculator.safeSubtract(res,
+							   				Integer.parseInt(digitsAcc));
     	               break;
     	       }
     	       digitsAcc = String.valueOf(res);
@@ -64,7 +66,8 @@ public class GuiApp {
     	                digitsAcc = EMPTY_STRING;
     	                break;
     	            case "Delete":
-    	                digitsAcc = digitsAcc.substring(0, digitsAcc.length() - 1);
+    	                digitsAcc = digitsAcc.substring(0,
+													digitsAcc.length() - 1);
     	    	        calculator.printOperand(digitsAcc);
     	                break;
     	            case "Clear":
