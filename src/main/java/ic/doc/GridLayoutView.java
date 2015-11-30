@@ -43,9 +43,7 @@ public class GridLayoutView implements Updatable {
         orderedButtons.add(new JButton("Space"));
         orderedButtons.add(new JButton(String.valueOf(0)));
         orderedButtons.add(new JButton("Delete"));
-        orderedButtons.add(new JButton("*"));
         orderedButtons.add(new JButton("+"));
-        orderedButtons.add(new JButton("/"));
         orderedButtons.add(new JButton("-"));
         orderedButtons.add(new JButton("Clear"));
         return orderedButtons;
